@@ -1,46 +1,63 @@
-## Telegram messenger for Android
+# Uchoq — Android messenjer
 
-[Telegram](https://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
-This repo contains the official source code for [Telegram App for Android](https://play.google.com/store/apps/details?id=org.telegram.messenger).
+**Uchoq** — Telegram platformasi asosida yaratilayotgan norasmiy Android messenjer. Loyiha tezkorlik, qulaylik va zamonaviy interfeysga e’tibor qaratadi.
 
-## Creating your Telegram Application
+Ushbu repozitoriy Uchoq Android ilovasining ochiq manba kodini o‘z ichiga oladi. Loyiha Telegram for Android manba kodi asosida ishlab chiqilmoqda.
 
-We welcome all developers to use our API and source code to create applications on our platform.
-There are several things we require from **all developers** for the moment.
+## Telegram API
 
-1. [**Obtain your own api_id**](https://core.telegram.org/api/obtaining_api_id) for your application.
-2. Please **do not** use the name Telegram for your app — or make sure your users understand that it is unofficial.
-3. Kindly **do not** use our standard logo (white paper plane in a blue circle) as your app's logo.
-3. Please study our [**security guidelines**](https://core.telegram.org/mtproto/security_guidelines) and take good care of your users' data and privacy.
-4. Please remember to publish **your** code too in order to comply with the licences.
+Uchoq Telegram API va MTProto protokolidan foydalanadi. Telegram talablariga muvofiq, ilova uchun alohida `api_id` va `api_hash` olish kerak.
 
-### API, Protocol documentation
+1. O‘z `api_id` va `api_hash` ma’lumotlaringizni [Telegram API sahifasi](https://core.telegram.org/api/obtaining_api_id) orqali oling.
+2. Uchoq Telegram’ning rasmiy ilovasi emas.
+3. Foydalanuvchilarning ma’lumotlari va maxfiyligini himoya qilish uchun [Telegram xavfsizlik tavsiyalari](https://core.telegram.org/mtproto/security_guidelines)ga amal qiling.
+4. Loyiha litsenziyasi talablariga rioya qilgan holda o‘zgartirilgan manba kodini ochiq saqlang.
 
-Telegram API manuals: https://core.telegram.org/api
+### API va protokol hujjatlari
 
-MTproto protocol manuals: https://core.telegram.org/mtproto
+- [Telegram API hujjatlari](https://core.telegram.org/api)
+- [MTProto protokoli](https://core.telegram.org/mtproto)
 
-### Compilation Guide
+## Loyihani build qilish
 
-**Note**: In order to support [reproducible builds](https://core.telegram.org/reproducible-builds), this repo contains dummy release.keystore,  google-services.json and filled variables inside BuildVars.java. Before publishing your own APKs please make sure to replace all these files with your own.
+> **Muhim:** Asl Telegram repozitoriysi reproducible build uchun test `release.keystore`, `google-services.json` va `BuildVars.java` ichida namunaviy qiymatlarni o‘z ichiga oladi. Uchoq’ning APK/AAB faylini tarqatishdan oldin ularni o‘zingizning kalit va konfiguratsiyalaringiz bilan almashtiring.
 
-You will require Android Studio 2025.1.4, Android NDK 27.2.12479018 and Android SDK 36.
+Kerakli vositalar:
 
-1. Clone the Telegram source code with its submodules:
+- Android Studio 2025.1.4
+- Android NDK 27.2.12479018
+- Android SDK 36
+
+### O‘rnatish va sozlash
+
+1. Repozitoriyni submodule’lari bilan clone qiling:
    ```bash
-   git clone --recursive --shallow-submodules https://github.com/DrKLO/Telegram.git Telegram
+   git clone --recursive --shallow-submodules https://github.com/javaoff364-cloud/Uchoq.git Uchoq
    ```
-   In case you forgot the `--recursive` flag, change to the `Telegram` directory and run:
+2. Agar submodule’lar olinmagan bo‘lsa:
    ```bash
-   git submodule init && git submodule update --init --recursive --depth=1
+   git submodule init
+   git submodule update --init --recursive --depth=1
    ```
-2. Copy your release.keystore into TMessagesProj/config
-3. Fill out RELEASE_KEY_PASSWORD, RELEASE_KEY_ALIAS, RELEASE_STORE_PASSWORD in gradle.properties to access your  release.keystore
-4.  Go to https://console.firebase.google.com/, create two android apps with application IDs org.telegram.messenger and org.telegram.messenger.beta, turn on firebase messaging and download google-services.json, which should be copied to the same folder as TMessagesProj.
-5. Open the project in the Studio (note that it should be opened, NOT imported).
-6. Fill out values in TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java – there’s a link for each of the variables showing where and which data to obtain.
-7. You are ready to compile Telegram.
+3. O‘zingizning `release.keystore` faylingizni `TMessagesProj/config` ichiga joylashtiring.
+4. `gradle.properties` ichida release signing ma’lumotlarini sozlang.
+5. Firebase loyihasini Uchoq package ID’lari uchun sozlang va `google-services.json` faylini kerakli joyga qo‘ying.
+6. Loyihani Android Studio’da **Open** orqali oching.
+7. `BuildVars.java` ichida o‘zingizning Telegram API va boshqa xizmat kalitlaringizni kiriting.
+8. Shundan so‘ng Uchoq’ni build qilishingiz mumkin.
 
-### Localization
+## Uchoq konfiguratsiyasi
 
-We moved all translations to https://translations.telegram.org/en/android/. Please use it.
+Asosiy Android application ID:
+
+```
+uz.uchoq.app
+```
+
+Debug build odatda `.beta` suffix bilan yaratiladi.
+
+## Litsenziya
+
+Uchoq Telegram for Android manba kodi asosida yaratilgan va GNU GPL v2 yoki undan keyingi versiya shartlari asosida tarqatiladi. Asl mualliflarning copyright va litsenziya bildirishnomalari saqlanadi.
+
+Telegram — Telegram Messenger LLP va tegishli huquq egalarining savdo belgisi. Uchoq Telegram tomonidan tasdiqlangan yoki rasmiy Telegram ilovasi emas.
