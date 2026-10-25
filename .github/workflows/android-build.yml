@@ -19,6 +19,18 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+          cache: gradle
+
+      - name: Cache native C/C++ build
+        uses: actions/cache@v4
+        with:
+          path: |
+            TMessagesProj/.cxx
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-uchoq-native-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/CMakeLists.txt', 'gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-uchoq-native-
 
       - name: Accept Android SDK licenses
         run: |
