@@ -21,8 +21,9 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Cache native C/C++ build
-        uses: actions/cache@v4
+      - name: Restore native C/C++ cache
+        id: native-cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             TMessagesProj/.cxx
@@ -61,6 +62,16 @@ jobs:
 
       - name: Build Uchoq APK
         run: ./gradlew assembleAfatDebug --no-daemon --stacktrace
+
+      - name: Save native C/C++ cache
+        if: always() && steps.native-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            TMessagesProj/.cxx
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ steps.native-cache.outputs.cache-primary-key }}
 
       - name: Upload Uchoq APK
         uses: actions/upload-artifact@v4
