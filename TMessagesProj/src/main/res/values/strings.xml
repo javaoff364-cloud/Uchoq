@@ -11708,4 +11708,21 @@
     <string name="NoPaidMessagesTokenUsed">un1 used your QR code and can message you for free</string>
     <string name="NoPaidMessagesTokenUsedOut">You used the QR code of un1 and can message them for free</string>
     <string name="NoPaidMessagesTokenImported">You can now message **%1$s** for free.</string>
+
+    <!-- Compatibility aliases for XML references introduced during Uchoq rebranding. -->
+    <string name="AppVersion">@string/TelegramVersion</string>
+    <string name="Business">@string/TelegramBusiness</string>
+    <string name="CacheSize">@string/TelegramCacheSize</string>
+    <string name="FAQ">@string/TelegramFAQ</string>
+    <string name="FaqUrl">@string/TelegramFaqUrl</string>
+    <string name="InviteToApp">@string/InviteToTelegramShort</string>
+    <string name="Passport">@string/TelegramPassport</string>
+    <string name="Premium">@string/TelegramPremium</string>
+    <string name="ShareApp">@string/ShareTelegram2</string>
+    <string name="Stars">@string/TelegramStars</string>
+    <string name="StarsChoose">@string/TelegramStarsChoose</string>
+    <string name="StarsGift">@string/TelegramStarsGift</string>
+    <string name="UseProxy">@string/UseProxyTelegram</string>
+    <string name="UseProxyInfo2">@string/UseProxyTelegramInfo2</string>
+    <string name="VoiceCall">@string/VoiceCallViaTelegram</string>
 </resources>
