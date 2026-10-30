@@ -1,0 +1,52 @@
+name: Uchoq Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools
+        run: |
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
+
+      - name: Restore release keystore
+        env:
+          UCHOQ_KEYSTORE_BASE64: ${{ secrets.UCHOQ_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$UCHOQ_KEYSTORE_BASE64" || {
+            echo "::error::UCHOQ_KEYSTORE_BASE64 GitHub Secret is not configured."
+            exit 1
+          }
+          echo "$UCHOQ_KEYSTORE_BASE64" | base64 --decode > TMessagesProj/config/release.keystore
+
+      - name: Build Uchoq release APK
+        run: ./gradlew assembleAfatRelease --no-daemon --stacktrace
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            TMessagesProj_App/build/outputs/apk/afat/release/app.apk \
+            --title "Uchoq $GITHUB_REF_NAME" \
+            --generate-notes
