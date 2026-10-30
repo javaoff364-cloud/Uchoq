@@ -32,6 +32,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -354,6 +358,8 @@ public class ApplicationLoader extends Application {
 
         LauncherIconController.tryFixLauncherIconIfNeeded();
         ProxyRotationController.init();
+
+        scheduleUchoqUpdateChecks();
 
         //if (BuildConfig.DEBUG_PRIVATE_VERSION) {
         //    Choreographer60FpsContent.getInstance().addFrameCallback(debugEverySecondChecks, 1);
@@ -721,4 +727,19 @@ public class ApplicationLoader extends Application {
     public File getDownloadedUpdateFile() {
         return null;
     }
+    private static void scheduleUchoqUpdateChecks() {
+        try {
+            PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(UchoqUpdateWorker.class, 6, java.util.concurrent.TimeUnit.HOURS)
+                    .setInitialDelay(1, java.util.concurrent.TimeUnit.MINUTES)
+                    .build();
+            WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+                    "uchoq_update_check",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    request
+            );
+        } catch (Throwable e) {
+            FileLog.e(e);
+        }
+    }
+
 }
