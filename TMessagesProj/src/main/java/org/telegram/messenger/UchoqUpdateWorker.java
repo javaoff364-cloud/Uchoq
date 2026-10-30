@@ -52,7 +52,7 @@ public class UchoqUpdateWorker extends Worker {
             String latestVersion = tag.startsWith("v") ? tag.substring(1) : tag;
             String currentVersion = BuildVars.BUILD_VERSION_STRING;
 
-            if (isNewerVersion(latestVersion, currentVersion)) {
+            if (isNewerVersion(latestVersion, currentVersion) && shouldNotify(latestVersion)) {
                 String downloadUrl = release.optString("html_url", "https://github.com/javaoff364-cloud/Uchoq/releases/latest");
                 String releaseNotes = release.optString("body", "");
                 showUpdateNotification(latestVersion, downloadUrl, releaseNotes);
@@ -125,6 +125,14 @@ public class UchoqUpdateWorker extends Worker {
             else break;
         }
         return digits.length() == 0 ? 0 : Integer.parseInt(digits.toString());
+    }
+
+    private boolean shouldNotify(String version) {
+        android.content.SharedPreferences prefs = getApplicationContext().getSharedPreferences("uchoq_updates", Context.MODE_PRIVATE);
+        String lastNotified = prefs.getString("last_notified_version", "");
+        if (version.equals(lastNotified)) return false;
+        prefs.edit().putString("last_notified_version", version).apply();
+        return true;
     }
 
     private void showUpdateNotification(String version, String url, String notes) {
