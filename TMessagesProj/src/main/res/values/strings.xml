@@ -11725,4 +11725,7 @@
     <string name="UseProxy">@string/UseProxyTelegram</string>
     <string name="UseProxyInfo2">@string/UseProxyTelegramInfo2</string>
     <string name="VoiceCall">@string/VoiceCallViaTelegram</string>
+    <string name="UchoqUpdateChannel">Uchoq updates</string>
+    <string name="UchoqUpdateAvailable">Uchoq update available</string>
+    <string name="UchoqUpdateAvailableText">A new Uchoq version (%1$s) is available. Tap to update.</string>
 </resources>
