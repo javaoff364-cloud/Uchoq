@@ -170,7 +170,7 @@ public class UchoqUpdateWorker extends Worker {
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getString(R.string.UchoqUpdateAvailable))
                 .setContentText(text)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
