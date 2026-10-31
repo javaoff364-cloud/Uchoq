@@ -34,9 +34,33 @@ jobs:
             echo "Using existing Uchoq release keystore"
             keytool -list -keystore TMessagesProj/config/release.keystore -storepass android >/dev/null
           fi
+      - name: Restore native build cache
+        id: native-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            TMessagesProj/.cxx
+            TMessagesProj_AppStandalone/.cxx
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-uchoq-native-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/CMakeLists.txt', 'gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-uchoq-native-
+
       - run: chmod +x gradlew
       - name: Build Uchoq ARM64 Release
         run: ./gradlew :TMessagesProj_AppStandalone:assembleAfatStandalone --build-cache --no-daemon --stacktrace
+      - name: Save native build cache
+        if: always() && steps.native-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            TMessagesProj/.cxx
+            TMessagesProj_AppStandalone/.cxx
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ steps.native-cache.outputs.cache-primary-key }}
+
       - name: List APK
         run: find TMessagesProj_AppStandalone/build/outputs/apk -type f -name "*.apk" -print
       - uses: actions/upload-artifact@v4
