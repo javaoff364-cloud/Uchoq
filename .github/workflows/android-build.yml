@@ -28,7 +28,12 @@ jobs:
       - name: Signing key
         run: |
           mkdir -p TMessagesProj/config
-          keytool -genkeypair -v -keystore TMessagesProj/config/release.keystore -storepass android -keypass android -alias androidkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Uchoq, O=Uchoq, L=Tashkent, C=UZ"
+          if [ ! -f TMessagesProj/config/release.keystore ]; then
+            keytool -genkeypair -v -keystore TMessagesProj/config/release.keystore -storepass android -keypass android -alias androidkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Uchoq, O=Uchoq, L=Tashkent, C=UZ"
+          else
+            echo "Using existing Uchoq release keystore"
+            keytool -list -keystore TMessagesProj/config/release.keystore -storepass android >/dev/null
+          fi
       - run: chmod +x gradlew
       - name: Build Uchoq ARM64 Release
         run: ./gradlew :TMessagesProj_AppStandalone:assembleAArm64Standalone --build-cache --no-daemon --stacktrace
