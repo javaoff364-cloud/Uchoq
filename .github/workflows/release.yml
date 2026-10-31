@@ -41,7 +41,7 @@ jobs:
             echo "$UCHOQ_KEYSTORE_BASE64" | base64 --decode > TMessagesProj/config/release.keystore
           else
             echo "No release secret found; using deterministic CI keystore for this release build."
-            keytool -genkeypair -v -keystore TMessagesProj/config/release.keystore -storepass android -keypass android -alias uchoq -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Uchoq, O=Uchoq, C=UZ"
+            keytool -genkeypair -v -keystore TMessagesProj/config/release.keystore -storepass android -keypass android -alias androidkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Uchoq, O=Uchoq, C=UZ"
           fi
       - name: Build Uchoq release APK
         run: ./gradlew :TMessagesProj_App:assembleAfatRelease --build-cache --no-daemon --stacktrace
