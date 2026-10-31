@@ -44,11 +44,11 @@ jobs:
             keytool -genkeypair -v -keystore TMessagesProj/config/release.keystore -storepass android -keypass android -alias uchoq -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Uchoq, O=Uchoq, C=UZ"
           fi
       - name: Build Uchoq release APK
-        run: ./gradlew :TMessagesProj_AppStandalone:assembleAfatStandalone --build-cache --no-daemon --stacktrace
+        run: ./gradlew :TMessagesProj_App:assembleAfatRelease --build-cache --no-daemon --stacktrace
       - name: Find APK
         id: apk
         run: |
-          APK="$(find TMessagesProj_AppStandalone/build/outputs/apk -type f -name '*.apk' | head -n 1)"
+          APK="$(find TMessagesProj_App/build/outputs/apk -type f -name '*.apk' | head -n 1)"
           test -n "$APK" || { echo "::error::APK not found"; exit 1; }
           echo "path=$APK" >> "$GITHUB_OUTPUT"
       - name: Publish APK to GitHub Release
