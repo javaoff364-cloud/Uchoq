@@ -40,10 +40,9 @@
         android:theme="@style/Theme.TMessages.Start"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
-        tools:replace="android:icon,android:roundIcon,android:supportsRtl"
         android:supportsRtl="false"
         android:requestLegacyExternalStorage="true"
-        tools:replace="android:supportsRtl">
+        tools:replace="android:icon,android:roundIcon,android:supportsRtl">
 
         <activity-alias
             android:enabled="false"
