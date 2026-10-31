@@ -1,82 +1,36 @@
 name: Uchoq Android Build
-
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   workflow_dispatch:
-
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Uchoq
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+        with: {submodules: recursive}
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
           cache: gradle
-
-      - name: Restore native C/C++ cache
-        id: native-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            TMessagesProj/.cxx
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-uchoq-native-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', '**/CMakeLists.txt', 'gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-uchoq-native-
-
-      - name: Accept Android SDK licenses
+      - name: Install Android SDK
         run: |
           yes | sdkmanager --licenses >/dev/null 2>&1 || true
-
-      - name: Install Android SDK components
-        run: |
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-36" "build-tools;36.0.0" "cmake;3.22.1" "ndk;27.2.12479018"
-
-      - name: Create temporary debug signing keystore
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "cmake;3.22.1" "ndk;27.2.12479018"
+      - name: Signing key
         run: |
           mkdir -p TMessagesProj/config
-          if [ ! -f TMessagesProj/config/release.keystore ]; then
-            keytool -genkeypair -v \
-              -keystore TMessagesProj/config/release.keystore \
-              -storepass android \
-              -keypass android \
-              -alias androidkey \
-              -keyalg RSA \
-              -keysize 2048 \
-              -validity 10000 \
-              -dname "CN=Uchoq Debug, OU=Uchoq, O=Uchoq, L=Tashkent, ST=Tashkent, C=UZ"
-          fi
-
-      - name: Make Gradle executable
-        run: chmod +x gradlew
-
-      - name: Build Uchoq APK
-        run: ./gradlew assembleAfatDebug --build-cache --no-daemon --stacktrace
-
-      - name: Save native C/C++ cache
-        if: always() && steps.native-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+          keytool -genkeypair -v -keystore TMessagesProj/config/release.keystore -storepass android -keypass android -alias androidkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Uchoq, O=Uchoq, L=Tashkent, C=UZ"
+      - run: chmod +x gradlew
+      - name: Build Uchoq ARM64 Release
+        run: ./gradlew :TMessagesProj_AppStandalone:assembleAArm64Standalone --build-cache --no-daemon --stacktrace
+      - name: List APK
+        run: find TMessagesProj_AppStandalone/build/outputs/apk -type f -name "*.apk" -print
+      - uses: actions/upload-artifact@v4
         with:
-          path: |
-            TMessagesProj/.cxx
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ steps.native-cache.outputs.cache-primary-key }}
-
-      - name: Upload Uchoq APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: uchoq-debug-apk
-          path: TMessagesProj_App/build/outputs/apk/**/*.apk
+          name: uchoq-arm64-release
+          path: TMessagesProj_AppStandalone/build/outputs/apk/**/*.apk
           if-no-files-found: error
