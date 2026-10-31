@@ -36,7 +36,7 @@ jobs:
           fi
       - run: chmod +x gradlew
       - name: Build Uchoq ARM64 Release
-        run: ./gradlew :TMessagesProj_AppStandalone:assembleAArm64Standalone --build-cache --no-daemon --stacktrace
+        run: ./gradlew :TMessagesProj_AppStandalone:assembleAfatStandalone --build-cache --no-daemon --stacktrace
       - name: List APK
         run: find TMessagesProj_AppStandalone/build/outputs/apk -type f -name "*.apk" -print
       - uses: actions/upload-artifact@v4
